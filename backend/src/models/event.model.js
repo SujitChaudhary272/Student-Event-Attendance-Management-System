@@ -16,7 +16,7 @@ export const getAllEvents = async () => {
   const result = await query(
     `SELECT e.*, u.name AS organizer
      FROM events e
-     JOIN users u ON e.organizer_id = u.id
+     LEFT JOIN users u ON e.organizer_id = u.id
      ORDER BY start_time`
   );
   return result.rows;

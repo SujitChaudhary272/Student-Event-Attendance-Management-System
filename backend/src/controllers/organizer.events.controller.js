@@ -205,3 +205,35 @@ export const updateMyClubEventStatus = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+/**
+ * Delete event only when it's Archived and belongs to organizer's club.
+ */
+export const deleteMyClubEvent = async (req, res) => {
+  try {
+    const { clubId } = req.user;
+    const { eventId } = req.params;
+
+    const existing = await pool.query(
+      "SELECT id, status FROM events WHERE id=$1 AND club_id=$2",
+      [eventId, clubId]
+    );
+
+    if (existing.rows.length === 0) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    if (existing.rows[0].status !== "Archived") {
+      return res.status(400).json({
+        error: "Only archived events can be deleted",
+      });
+    }
+
+    await pool.query("DELETE FROM events WHERE id=$1 AND club_id=$2", [eventId, clubId]);
+
+    return res.json({ message: "Event deleted" });
+  } catch (err) {
+    console.error("deleteMyClubEvent error:", err);
+    return res.status(500).json({ error: "Failed to delete event" });
+  }
+};

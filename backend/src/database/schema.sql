@@ -1,8 +1,11 @@
--- UCEF: Unified Campus Events Fabric
+-- Student Event Attendance Management system
 -- PostgreSQL schema for hackathon MVP
 
 -- Safety: create extension for UUID if needed
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Remove legacy audit table if it exists.
+DROP TABLE IF EXISTS audit_trail;
 
 -- =========================
 -- USERS (Students/Admins)
@@ -12,6 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
+  auth_provider TEXT NOT NULL DEFAULT 'password',
+  google_sub TEXT UNIQUE,
   role TEXT NOT NULL CHECK (role IN ('Student','Admin')),
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -38,7 +43,7 @@ CREATE TABLE IF NOT EXISTS members (
   name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'Member' CHECK (role IN ('Lead','Member')),
+  role TEXT NOT NULL DEFAULT 'Member' CHECK (role IN ('President','Secretary','Member')),
   status TEXT NOT NULL DEFAULT 'Active' CHECK (status IN ('Active','Inactive')),
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -49,16 +54,21 @@ CREATE TABLE IF NOT EXISTS members (
 CREATE TABLE IF NOT EXISTS events (
   id SERIAL PRIMARY KEY,
   club_id INT REFERENCES clubs(id) ON DELETE SET NULL,
-  organizer_id INT REFERENCES users(id) ON DELETE SET NULL,
+  organizer_id INT,
   title TEXT NOT NULL,
   description TEXT,
   event_type TEXT NOT NULL,
+  venue TEXT,
+  image_url TEXT,
+  capacity INT DEFAULT 200,
   attendance_method TEXT NOT NULL DEFAULT 'QR_SINGLE'
     CHECK (attendance_method IN ('QR_SINGLE','QR_INOUT','OTP','MANUAL')),
+  attendance_session_code TEXT,
+  attendance_session_expires TIMESTAMP,
   start_time TIMESTAMP NOT NULL,
   end_time TIMESTAMP NOT NULL,
   status TEXT NOT NULL DEFAULT 'Draft'
-    CHECK (status IN ('Draft','Live','Completed','Archived')),
+    CHECK (status IN ('Draft','Created','Live','Completed','Archived')),
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

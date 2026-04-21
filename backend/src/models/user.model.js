@@ -2,9 +2,9 @@ import { query } from "../config/db.js";
 
 export const createUser = async (name, email, passwordHash, role) => {
   const result = await query(
-    `INSERT INTO users (name, email, password_hash, role)
-     VALUES ($1,$2,$3,$4)
-     RETURNING id, name, email, role, created_at`,
+    `INSERT INTO users (name, email, password_hash, auth_provider, role, updated_at)
+     VALUES ($1,$2,$3,'password',$4,NOW())
+     RETURNING id, name, email, role, auth_provider, created_at`,
     [name, email, passwordHash, role]
   );
   return result.rows[0];

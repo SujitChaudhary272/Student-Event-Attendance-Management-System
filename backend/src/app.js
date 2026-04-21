@@ -4,10 +4,6 @@ import morgan from "morgan";
 import { fileURLToPath } from "url";
 import path from "path";
 
-// Config
-import { env } from "./config/env.js";
-import { pool } from "./config/db.js";
-
 // Routes
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
@@ -32,9 +28,7 @@ import studentCertificateRoutes from "./routes/student.certificates.routes.js";
 import publicCertRoutes from "./routes/public.certificate.routes.js";
 
 // Middleware
-import { authMiddleware } from "./middleware/auth.middleware.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
-import { rateLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -57,31 +51,31 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 // ✅ PUBLIC routes should NOT be rate-limited
 app.use("/api/public", publicRoutes);
 
-// ✅ AUTH routes should be rate-limited (protect OTP/login)
-app.use("/api/students/auth", rateLimiter, studentAuthRoutes);
-app.use("/api/auth", rateLimiter, authRoutes); // if used for admin/user auth
-app.use("/api/organizers", rateLimiter, organizerAuthRoutes); // organizer login etc.
-app.use("/api/admin", rateLimiter, adminRoutes); // admin auth + admin actions
+// ✅ Auth routes are rate-limited at the route-handler level only
+app.use("/api/students/auth", studentAuthRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/organizers", organizerAuthRoutes);
+app.use("/api/admin", adminRoutes);
 
-// ✅ other APIs (optional limit) — if you want, keep limiter here
-app.use("/api/users", rateLimiter, userRoutes);
-app.use("/api/events", rateLimiter, eventRoutes);
-app.use("/api/attendance", rateLimiter, attendanceRoutes);
-app.use("/api/reports", rateLimiter, reportRoutes);
-app.use("/api/registrations", rateLimiter, registrationRoutes);
+// ✅ Normal app routes stay responsive and should not self-trigger 429s during page loads
+app.use("/api/users", userRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/reports", reportRoutes);
+app.use("/api/registrations", registrationRoutes);
 
-app.use("/api/organizers", rateLimiter, organizerEventRoutes);
-app.use("/api/organizers", rateLimiter, organizerAttendanceRoutes);
-// app.use("/api/organizers", rateLimiter, certificateRoutes);
-app.use("/api/organizers", rateLimiter, organizerParticipantsRoutes);
-app.use("/api/organizers", rateLimiter, organizerQrRoutes);
+app.use("/api/organizers", organizerEventRoutes);
+app.use("/api/organizers", organizerAttendanceRoutes);
+app.use("/api/organizers", certificateRoutes);
+app.use("/api/organizers", organizerParticipantsRoutes);
+app.use("/api/organizers", organizerQrRoutes);
 app.use("/api/public", publicCertRoutes);
 
 
 // Students protected routes
-app.use("/api/students", rateLimiter, studentEventRoutes);
-app.use("/api/students", rateLimiter, studentQrRoutes);
-app.use("/api/students", rateLimiter, clubProfileRoutes);
+app.use("/api/students", studentEventRoutes);
+app.use("/api/students", studentQrRoutes);
+app.use("/api/students", clubProfileRoutes);
 app.use("/api/students", studentParticipationRoutes);
 app.use("/api/students", studentCertificateRoutes);
 // Health check

@@ -1,0 +1,70 @@
+
+> dev
+> cross-env NODE_ENV=development node src/server.js
+
+[dotenv@17.2.3] injecting env (13) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+✅ PostgreSQL Connected
+PostgreSQL connected successfully
+Database schema is ready
+Server running on port 5000
+sendVerificationOtp error: Error: connect ETIMEDOUT 192.178.211.109:587
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -4039,
+  code: 'ESOCKET',
+  syscall: 'connect',
+  address: '192.178.211.109',
+  port: 587,
+  command: 'CONN'
+}
+[0mPOST /api/students/auth/register [32m200[0m 21201.711 ms - 213[0m
+✅ PostgreSQL Connected
+[0mGET /api/public/clubs [36m304[0m 147.988 ms - -[0m
+[0mGET /api/public/clubs [36m304[0m 1.371 ms - -[0m
+[0mGET /uploads/1775492990657.jpeg [36m304[0m 1.788 ms - -[0m
+✅ PostgreSQL Connected
+sendVerificationOtp error: Error: connect ETIMEDOUT 192.178.211.109:587
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -4039,
+  code: 'ESOCKET',
+  syscall: 'connect',
+  address: '192.178.211.109',
+  port: 587,
+  command: 'CONN'
+}
+[0mPOST /api/students/auth/register [32m200[0m 21143.750 ms - 217[0m
+sendVerificationOtp error: Error: connect ETIMEDOUT 192.178.211.109:587
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -4039,
+  code: 'ESOCKET',
+  syscall: 'connect',
+  address: '192.178.211.109',
+  port: 587,
+  command: 'CONN'
+}
+[0mPOST /api/students/auth/register [32m200[0m 21105.991 ms - 214[0m
+✅ PostgreSQL Connected
+[0mPOST /api/students/auth/verify-otp [33m400[0m 138.429 ms - 23[0m
+✅ PostgreSQL Connected
+sendVerificationOtp error: Error: connect ETIMEDOUT 192.178.211.109:587
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -4039,
+  code: 'ESOCKET',
+  syscall: 'connect',
+  address: '192.178.211.109',
+  port: 587,
+  command: 'CONN'
+}
+[0mPOST /api/students/auth/register [32m200[0m 21139.438 ms - 213[0m
+sendVerificationOtp error: Error: connect ETIMEDOUT 192.178.211.109:587
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -4039,
+  code: 'ESOCKET',
+  syscall: 'connect',
+  address: '192.178.211.109',
+  port: 587,
+  command: 'CONN'
+}
+[0mPOST /api/students/auth/register [32m200[0m 21116.073 ms - 213[0m
+✅ PostgreSQL Connected
+[0mPOST /api/students/auth/verify-otp [33m400[0m 132.527 ms - 23[0m
+^C

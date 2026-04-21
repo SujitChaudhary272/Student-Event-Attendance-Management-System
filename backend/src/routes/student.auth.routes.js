@@ -1,13 +1,19 @@
 import express from "express";
-import { registerStudent, verifyEmailOtp, loginStudent, getMyProfile } from "../controllers/student.auth.controller.js";
+import {
+  registerStudent,
+  loginStudent,
+  getMyProfile,
+  deleteMyAccount,
+} from "../controllers/student.auth.controller.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
-import { requireVerifiedStudent } from "../middleware/requireVerifiedStudent.js";
+import { authRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
-router.post("/register", registerStudent);
-router.post("/verify-otp", verifyEmailOtp);
-router.post("/login", loginStudent);
-router.get("/me", authMiddleware, requireVerifiedStudent, getMyProfile); 
+router.post("/register", authRateLimiter, registerStudent);
+router.post("/login", authRateLimiter, loginStudent);
+router.get("/me", authMiddleware, getMyProfile);
+router.delete("/me", authMiddleware, deleteMyAccount);
+router.post("/me/delete", authMiddleware, deleteMyAccount);
 
 export default router;

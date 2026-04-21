@@ -14,26 +14,14 @@ export const env = {
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1d",
 
-  MAIL_USER: process.env.MAIL_USER,
-  MAIL_PASS: process.env.MAIL_PASS,
-
-  NODE_ENV: process.env.NODE_ENV || "development"
+  NODE_ENV: process.env.NODE_ENV || "development",
 };
 
-// Validate required variables
-const required = [
-  "DB_HOST",
-  "DB_NAME",
-  "DB_USER",
-  "DB_PASSWORD",
-  "JWT_SECRET",
-  "MAIL_USER",
-  "MAIL_PASS"
-];
+const required = ["DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD", "JWT_SECRET"];
 
-required.forEach(key => {
+required.forEach((key) => {
   if (!process.env[key]) {
-    console.error(`❌ Missing environment variable: ${key}`);
+    console.error(`Missing environment variable: ${key}`);
     process.exit(1);
   }
 });
